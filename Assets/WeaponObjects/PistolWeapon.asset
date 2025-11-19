@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95403ab4883e8614094002b564b7c739, type: 3}
+  m_Name: PistolWeapon
+  m_EditorClassIdentifier: 
+  _index: 2
+  itemName: Pistol
+  itemSize: {x: 2, y: 1}
+  itemIcon: {fileID: 21300000, guid: a89c3ea2c3bb2554dae03610ab437f8b, type: 3}
+  mesh: {fileID: 4300000, guid: 1d2d5f0a598df4e4d833227a0b9dd82d, type: 3}
+  material: {fileID: 2100000, guid: dd41db2cdb4e66e4985303e1287ab101, type: 2}
+  itemBaseGameObject: {fileID: 4576523821781719504, guid: d1736a2bd86c01a4e8fe774bb04b995c, type: 3}
+  isStackable: 0
+  stackMax: 0
+  startingStackSize: {x: 0, y: 0}
+  SpawnOffset: {x: 0.5, y: -0.25, z: 0.5}
+  attackConfiguration: {fileID: 11400000, guid: 225dd6f762e629b49a37e48688879811, type: 2}
+  trailConfiguration: {fileID: 11400000, guid: 080ca4b3cc526014688837d7023aae10, type: 2}
+  validAmmoType: {fileID: 11400000, guid: a3ce8fb158c95234d8c6fa78a85d044b, type: 2}

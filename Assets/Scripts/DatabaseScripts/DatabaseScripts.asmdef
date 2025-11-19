@@ -1,0 +1,16 @@
+{
+    "name": "DatabaseScripts",
+    "rootNamespace": "",
+    "references": [
+        "GUID:ce6b130caaca03644b1bb8794c551482"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
