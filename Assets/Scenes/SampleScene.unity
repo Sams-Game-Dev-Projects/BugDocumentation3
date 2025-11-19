@@ -904,7 +904,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _movementSpeed: 5
-  _mouseSensitivity: 1387.2
+  _mouseSensitivity: 5
   _verticalMouseRange: 60
   _onReload:
     m_PersistentCalls:
@@ -1011,7 +1011,19 @@ MonoBehaviour:
         m_CallState: 2
   OnOpenInventory:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1413347598}
+        m_TargetAssemblyTypeName: 
+        m_MethodName: 
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!136 &1413347601
 CapsuleCollider:
   m_ObjectHideFlags: 0

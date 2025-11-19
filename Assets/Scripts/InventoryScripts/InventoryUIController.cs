@@ -17,10 +17,10 @@ public class InventoryUIController : MonoBehaviour
     [SerializeField] public GameObject _inventoryContainer;
     [SerializeField] private Vector2 _slotSize;
 
-    public static Dictionary<Inventory, List<Slot>> inventoryDictionary;
+    public static Dictionary<Inventory, List<Slot>> inventoryDictionary = new Dictionary<Inventory, List<Slot>>();
 
     private IInventory _inventory;
-
+    
     /// <summary>
     /// When this object is turned on, get the inventory attached to this object
     /// If the inventory is already in the dictionary, return
@@ -29,8 +29,8 @@ public class InventoryUIController : MonoBehaviour
     private void OnEnable()
     {
         _inventory = _inventoryContainer.GetComponent<IInventory>();
-
-        if (inventoryDictionary.ContainsKey(_inventory.GetInventory) == false)
+        
+        if (inventoryDictionary.ContainsKey(_inventory.GetInventory) == true)
         {
             return;
         }

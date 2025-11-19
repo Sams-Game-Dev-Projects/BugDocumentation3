@@ -28,6 +28,7 @@ public class InputListener : MonoBehaviour
     private void Awake()
     {
         _playerInput = new PlayerInput();
+        
     }
 
     /// <summary>
@@ -37,6 +38,8 @@ public class InputListener : MonoBehaviour
     private void OnEnable()
     {
         GameStateController.OnStateChange += OnStateChange;
+        _playerInput.GamePlay.OpenInventory.started += OpenInventory;
+        _playerInput.GamePlay.OpenInventory.Enable();
         OnStateChange(GameStateController.GetCurrentState);
     }
 
@@ -48,6 +51,8 @@ public class InputListener : MonoBehaviour
     private void OnDisable()
     {
         GameStateController.OnStateChange -= OnStateChange;
+        _playerInput.GamePlay.OpenInventory.started -= OpenInventory;
+        _playerInput.GamePlay.OpenInventory.Disable();
     }
 
     /// <summary>
@@ -57,7 +62,7 @@ public class InputListener : MonoBehaviour
     {
         OnMouseMove?.Invoke(_mouseMovement.ReadValue<Vector2>());
         OnMove?.Invoke(_movement.ReadValue<Vector2>());
-        OnOpenInventory?.Invoke();       
+        // OnOpenInventory?.Invoke();       
     }
 
     /// <summary>
@@ -118,11 +123,11 @@ public class InputListener : MonoBehaviour
         _movement = _playerInput.GamePlay.Movement;
         _mouseMovement = _playerInput.GamePlay.MouseLook;
 
-        _playerInput.GamePlay.Fire.started -= Attack;
-        _playerInput.GamePlay.Fire.canceled -= Attack;
+        _playerInput.GamePlay.Fire.started += Attack;
+        _playerInput.GamePlay.Fire.canceled += Attack;
 
-        _playerInput.GamePlay.Interact.started -= Interact;
-        _playerInput.GamePlay.Reload.started -= Reload;
+        _playerInput.GamePlay.Interact.started += Interact;
+        _playerInput.GamePlay.Reload.started += Reload;
 
         _playerInput.GamePlay.Movement.Enable();
         _playerInput.GamePlay.Fire.Enable();
@@ -150,7 +155,8 @@ public class InputListener : MonoBehaviour
 
     private void OpenInventory(InputAction.CallbackContext obj)
     {
-        OnOpenInventory?.Invoke();       
+        // OnOpenInventory?.Invoke();   
+        GameStateController.ChangeStateRequest(GameStateController.GetCurrentState == GameState.GamePlay ? GameState.Menu : GameState.GamePlay);
     }
 
     /// <summary>

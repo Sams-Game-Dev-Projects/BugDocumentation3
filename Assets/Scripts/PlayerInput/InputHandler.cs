@@ -53,11 +53,11 @@ public class InputHandler : MonoBehaviour
     /// </summary>
     public void MouseMovement(Vector2 offset)
     {
-        float x = offset.x * _mouseSensitivity * Time.deltaTime;
+        float x = offset.x * _mouseSensitivity;
         transform.Rotate(0f, x, 0f);
 
 
-        _currentVerticalRotation -= offset.y * _mouseSensitivity * Time.deltaTime;
+        _currentVerticalRotation -= offset.y * _mouseSensitivity;
         _currentVerticalRotation = Mathf.Clamp(_currentVerticalRotation, -_verticalMouseRange, _verticalMouseRange);
         _mainCameraTransform.localRotation = Quaternion.Euler(_currentVerticalRotation, 0f, 0f);
     }

@@ -21,6 +21,7 @@ public class Database : ScriptableObject
 /// An editor script not within the editor folder is allowed provided the user has correctly
 /// Added protective lines of code. Otherwise there is a high chance that the project will not build
 /// </summary>
+#if UNITY_EDITOR
 [CustomEditor(typeof(Database))]
 public class DatabaseEditor : Editor
 {
@@ -45,3 +46,4 @@ public class DatabaseEditor : Editor
         }
     }
 }
+#endif
