@@ -22,7 +22,7 @@ public class Slot : MonoBehaviour
     public ItemToken GetItemInSlot { get { return _itemInSlot; } }
 
     //Returns a true or false value based on if the slot is empty
-    public bool IsOccupied { get { return _itemInSlot == null; } }
+    public bool IsOccupied { get { return _itemInSlot != null; } }
 
     /// <summary>
     /// Sets up the slot to know all the base information such as the inventory it is connected to, the size, and the position of this slot
@@ -63,6 +63,8 @@ public class Slot : MonoBehaviour
             return;
         }
 
+        _itemInSlot.onAmountChanged -= OnStackAmountChanged;
+        _itemInSlot.onAmountChanged += OnStackAmountChanged;
         OnStackAmountChanged(_itemInSlot.GetAmount);
     }
 
@@ -143,6 +145,10 @@ public class Slot : MonoBehaviour
     /// </summary>
     public void RemoveItem()
     {
+        if (_itemInSlot != null)
+        {
+            _itemInSlot.onAmountChanged -= OnStackAmountChanged;
+        }
         _itemInSlot = null;
         ChangeSlotUIData(_itemInSlot);
     }

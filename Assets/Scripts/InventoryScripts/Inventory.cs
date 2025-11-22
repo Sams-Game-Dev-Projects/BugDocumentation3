@@ -124,6 +124,7 @@ public class Inventory
 
                 //This space is useable, add the item into this space
                 AddItem(slots, itemToAdd, position);
+                return true;
             }
         }
 
@@ -168,12 +169,16 @@ public class Inventory
 
         _itemsInInventory.Add(itemToAdd);
         slots[CalculateIndex(startingPosition)].ChangeSlotUIData(itemToAdd);
-        slots[CalculateIndex(startingPosition)].AddItem(itemToAdd);
+        slots[CalculateIndex(startingPosition)].AddItem(itemToAdd, true);
 
-        for (int y = startingPosition.y + 1; y < startingPosition.y + itemBase.itemSize.y; y++)
+        for (int y = startingPosition.y; y < startingPosition.y + itemBase.itemSize.y; y++)
         {
-            for (int x = startingPosition.x + 1; x < startingPosition.x + itemBase.itemSize.x; x++)
+            for (int x = startingPosition.x; x < startingPosition.x + itemBase.itemSize.x; x++)
             {
+                if (x == startingPosition.x && y == startingPosition.y)
+                {
+                    continue;
+                }
                 slots[CalculateIndex(x, y)].AddItem(itemToAdd);
             }
         }

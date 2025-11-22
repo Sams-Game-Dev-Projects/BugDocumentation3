@@ -12,6 +12,6 @@ public abstract class DatabaseElement : ScriptableObject
     public int GetDatabaseIndex { get { return _index; } }
     public void SetItemDatabaseIndex(int value)
     {
-        value = _index;
+        _index = value;
     }
 }
