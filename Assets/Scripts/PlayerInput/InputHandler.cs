@@ -53,12 +53,18 @@ public class InputHandler : MonoBehaviour
     /// </summary>
     public void MouseMovement(Vector2 offset)
     {
-        float x = offset.x * _mouseSensitivity;
-        transform.Rotate(0f, x, 0f);
+        // Scale mouse input by sensitivity and deltaTime for consistent movement
+        float mouseX = offset.x * _mouseSensitivity;
+        float mouseY = offset.y * _mouseSensitivity;
 
-
-        _currentVerticalRotation -= offset.y * _mouseSensitivity;
+        // Adjust vertical rotation (looking up/down)
+        _currentVerticalRotation -= mouseY;
         _currentVerticalRotation = Mathf.Clamp(_currentVerticalRotation, -_verticalMouseRange, _verticalMouseRange);
+
+        // Apply vertical rotation to the camera (pitch)
         _mainCameraTransform.localRotation = Quaternion.Euler(_currentVerticalRotation, 0f, 0f);
+
+        // Rotate the player horizontally (yaw)
+        transform.Rotate(Vector3.up * mouseX);
     }
 }

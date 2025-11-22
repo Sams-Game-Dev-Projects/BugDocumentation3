@@ -101,8 +101,9 @@ public class Slot : MonoBehaviour
 
         ItemBase itemBase = itemToUse.GetItemBase;
 
-        _slotIconImage.rectTransform.sizeDelta = new Vector2(itemBase.itemSize.x, itemBase.itemSize.y);
-        _stackText.rectTransform.sizeDelta = new Vector2(itemBase.itemSize.x, itemBase.itemSize.y);
+        Vector2 pixelSize = Vector2.Scale(_slotSize, itemBase.itemSize);
+        _slotIconImage.rectTransform.sizeDelta = pixelSize;
+        _stackText.rectTransform.sizeDelta = pixelSize;
         _slotIconImage.sprite = itemBase.itemIcon;
     }
 
