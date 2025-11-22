@@ -52,18 +52,23 @@ public class ItemPickup : MonoBehaviour, IInteract
     /// </summary>
     public void Interact(IInteractor interactor)
     {
+        Debug.Log("a");
         if (interactor.GetInventory == null || _itemBaseToCollect == null)
         {
             return;
         }
-
+        Debug.Log("b");
         if(_itemToken == null)
         {
             _itemToken = _itemBaseToCollect.GenerateToken(_itemBaseToCollect);
         }
 
+        Debug.Log("1");
         IInventory inventory = interactor.GetInventory;
+        Debug.Log("2");
         inventory.GetInventory.CanAddItem(_itemToken, InventoryUIController.inventoryDictionary[inventory.GetInventory]);
+        Debug.Log("3");
         ObjectPooling.Despawn(gameObject);
+        Debug.Log("4");
     }
 }

@@ -16,6 +16,9 @@ public class InputListener : MonoBehaviour
     [SerializeField] private UnityEvent<Vector2> OnMouseMove;   //What methods are called when moving the mouse
     [SerializeField] private UnityEvent OnOpenInventory;        //What methods are called when opening the inventory
 
+    [SerializeField] private UnityEvent OnGamePlay;
+    [SerializeField] private UnityEvent OnMenu;
+
     private PlayerInput _playerInput;       //Input system provided by Unity (New Input System)
     private InputAction _movement;          //Action that tracks the player's movement
     private InputAction _mouseMovement;     //Action that tracks the player's mouse movement

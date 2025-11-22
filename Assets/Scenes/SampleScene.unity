@@ -1024,6 +1024,36 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  OnGamePlay:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1975032375}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnMenu:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1975032375}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
 --- !u!136 &1413347601
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -1795,7 +1825,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1975032376
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1830,7 +1860,7 @@ MonoBehaviour:
   _inventoryPanel: {fileID: 1975032376}
   _slotObject: {fileID: 3059371564487324421, guid: ccc0b510827542948982da2454c5995f, type: 3}
   _inventoryContainer: {fileID: 1413347598}
-  _slotSize: {x: 40, y: 40}
+  _slotSize: {x: 2, y: 2}
 --- !u!114 &1975032378
 MonoBehaviour:
   m_ObjectHideFlags: 0

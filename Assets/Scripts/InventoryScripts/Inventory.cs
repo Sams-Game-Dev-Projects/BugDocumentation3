@@ -32,7 +32,7 @@ public class Inventory
     /// </summary>
     public int CalculateIndex(int x, int y)
     {
-        return x * _inventorySizeX - y;
+        return y * _inventorySizeX + x;
     }
 
     /// <summary>
@@ -42,7 +42,7 @@ public class Inventory
     /// </summary>
     public int CalculateIndex(Vector2Int position)
     {
-        return position.x * _inventorySizeX - position.y;
+        return position.y * _inventorySizeX + position.x;
     }
 
     /// <summary>
@@ -71,7 +71,7 @@ public class Inventory
     /// </summary>
     private bool IsOutOfBounds(int x, int y)
     {
-        if (x > _inventorySizeX || y > _inventorySizeY || x < 0 || y < 0)
+        if (x >= _inventorySizeX || y >= _inventorySizeY || x < 0 || y < 0)
         {
             return true;
         }
@@ -187,9 +187,9 @@ public class Inventory
     /// </summary>
     private bool CheckNeighboursAreEmpty(List<Slot> slots, Vector2Int startingPosition, ItemBase itemToAdd)
     {
-        for (int y = 0; y < startingPosition.y + y; y++)
+        for (int y = startingPosition.y; y < startingPosition.y + itemToAdd.itemSize.y; y++)
         {
-            for (int x = 0; x < startingPosition.x + x; x++)
+            for (int x = startingPosition.x; x < startingPosition.x + itemToAdd.itemSize.x; x++)
             {
                 if (IsOutOfBounds(x, y) == true)
                 {
