@@ -904,7 +904,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _movementSpeed: 5
-  _mouseSensitivity: 5
+  _mouseSensitivity: 2
   _verticalMouseRange: 60
   _onReload:
     m_PersistentCalls:

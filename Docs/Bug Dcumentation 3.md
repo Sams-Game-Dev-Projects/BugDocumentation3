@@ -27,10 +27,10 @@ What I found and did
 - State system: `GameStateController` publishes `OnStateChange` and tracks `GamePlay` vs `Menu` (`Assets/Scripts/GameManagers/GameStateController.cs`).
 - Input wiring bugs: `EnableGamePlay` unsubscribes instead of subscribing to actions, so Fire/Reload/Interact never trigger. Also `OnOpenInventory` is invoked every frame in `Update` (`Assets/Scripts/PlayerInput/InputListener.cs:29,58-61,106-161`).
 - Missing toggle binding: The input action asset has no Inventory/Menu toggle. Plan: add a binding (e.g., Tab/Escape) and call `GameStateController.ChangeStateRequest(...)` to swap states.
-- Action: Added `OpenInventory` to Input Actions. During `InputListener.OnEnable` we now subscribe to the `OpenInventory` method and unsubscribe during `InputListener.OnDisable`. The newly created `OpenInventory` method now swaps between  game states whenever it is called.
+- Action: Added `OpenInventory` to Input Actions. During `InputListener.OnEnable` we now subscribe to the `OpenInventory` method and unsubscribe during `InputListener.OnDisable`. The newly created `OpenInventory` method now swaps between game states whenever it is called.
 - Cursor/UI: Drive `Cursor.lockState/visible` and the inventory panel’s active state from `OnStateChange` so movement/shoot/look are disabled in Menu mode and inventory is only visible there.
-- Inventory UI: Inside the `InventoryUIController`the OnEnable method is supposed to check if the inventory has already been added to `inventoryDictionary` and only add an inventory if it wasn't already added. It's actually doing the exact opposite and only trying to add the inventory if it's already in `inventoryDictionary`. `inventoryDictionary` was also declared but not instantiated.
-- Action: Instantiate `inventoryDictionary` during declaration in `InventoryUIController.cs`. 
+- Inventory UI: `InventoryUIController.OnEnable` logic was inverted (returned when missing) and the static `inventoryDictionary` was never instantiated, so inventories weren’t registered and pickups threw `KeyNotFound` when trying to add items.
+- Action: Instantiate the dictionary up front, initialize/register inventories in `Awake`/`EnsureInventoryRegistered`, add `InventoryUIController.Instance`, and make `ItemPickup` auto-register/find slots before adding to prevent `KeyNotFound` during pickup.
 
  
 

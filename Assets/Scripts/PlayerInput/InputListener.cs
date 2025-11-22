@@ -76,9 +76,15 @@ public class InputListener : MonoBehaviour
         switch (state)
         {
             case GameState.GamePlay:
+                OnGamePlay?.Invoke();
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
                 EnableGamePlay();
                 break;
             case GameState.Menu:
+                OnMenu?.Invoke();
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
                 DisableGamePlay();
                 break;
         }

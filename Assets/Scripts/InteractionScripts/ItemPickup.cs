@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -66,7 +67,23 @@ public class ItemPickup : MonoBehaviour, IInteract
         Debug.Log("1");
         IInventory inventory = interactor.GetInventory;
         Debug.Log("2");
-        inventory.GetInventory.CanAddItem(_itemToken, InventoryUIController.inventoryDictionary[inventory.GetInventory]);
+        if (InventoryUIController.inventoryDictionary.TryGetValue(inventory.GetInventory, out List<Slot> slots) == false)
+        {
+            InventoryUIController uiController = InventoryUIController.Instance;
+            if (uiController == null)
+            {
+                uiController = FindObjectOfType<InventoryUIController>(true);
+            }
+
+            uiController?.EnsureInventoryRegistered(inventory);
+            if (InventoryUIController.inventoryDictionary.TryGetValue(inventory.GetInventory, out slots) == false)
+            {
+                Debug.LogWarning("Inventory UI slots not initialized for this inventory; cannot pick up item yet.");
+                return;
+            }
+        }
+
+        inventory.GetInventory.CanAddItem(_itemToken, slots);
         Debug.Log("3");
         ObjectPooling.Despawn(gameObject);
         Debug.Log("4");

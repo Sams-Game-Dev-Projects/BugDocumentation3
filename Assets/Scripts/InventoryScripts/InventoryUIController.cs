@@ -12,6 +12,8 @@ public class InventoryUIController : MonoBehaviour
 {
     public static ItemToken currentlySelectedItem;
 
+    public static InventoryUIController Instance { get; private set; }
+
     [SerializeField] private RectTransform _inventoryPanel;
     [SerializeField] private GameObject _slotObject;
     [SerializeField] public GameObject _inventoryContainer;
@@ -22,20 +24,48 @@ public class InventoryUIController : MonoBehaviour
     private IInventory _inventory;
     
     /// <summary>
-    /// When this object is turned on, get the inventory attached to this object
+    /// When this object loads, get the inventory attached to this object
     /// If the inventory is already in the dictionary, return
     /// Otherwise, set up the inventory and add it
     /// </summary>
-    private void OnEnable()
+    private void Awake()
     {
+        Instance = this;
+
+        if (_inventoryContainer == null)
+        {
+            Debug.LogError("InventoryUIController is missing an inventory container reference.");
+            return;
+        }
+
         _inventory = _inventoryContainer.GetComponent<IInventory>();
-        
+        if (_inventory == null)
+        {
+            Debug.LogError("InventoryUIController could not find an IInventory on the container.");
+            return;
+        }
+
         if (inventoryDictionary.ContainsKey(_inventory.GetInventory) == true)
         {
             return;
         }
 
         InitInventory(_inventory.GetInventory);
+    }
+
+    public void EnsureInventoryRegistered(IInventory inventory)
+    {
+        if (inventory == null || inventory.GetInventory == null)
+        {
+            return;
+        }
+
+        if (inventoryDictionary.ContainsKey(inventory.GetInventory))
+        {
+            return;
+        }
+
+        InitInventory(inventory.GetInventory);
     }
 
     /// <summary>
