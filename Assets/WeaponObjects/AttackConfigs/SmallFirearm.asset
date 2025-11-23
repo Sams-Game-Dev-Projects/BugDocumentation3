@@ -17,8 +17,9 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   spread: {x: 0.03, y: 0.03, z: 0.03}
-  automaticAttacking: 1
-  attackRate: 0.1
+  automaticAttacking: 0
+  attackRate: 0.2
   maxDistance: 100
   sphereRadius: 0.2
   ammoNeededPerAttack: 1
+  projectilesPerShot: 1

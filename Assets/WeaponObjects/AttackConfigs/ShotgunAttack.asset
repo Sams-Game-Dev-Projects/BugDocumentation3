@@ -19,7 +19,7 @@ MonoBehaviour:
   spread: {x: 0.06, y: 0.06, z: 0.06}
   automaticAttacking: 0
   attackRate: 1
-  maxDistance: 100
+  maxDistance: 10
   sphereRadius: 0.2
   ammoNeededPerAttack: 1
   projectilesPerShot: 6
