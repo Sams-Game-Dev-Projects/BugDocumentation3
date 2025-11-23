@@ -22,7 +22,7 @@ public class InventoryUIController : MonoBehaviour
     public static Dictionary<Inventory, List<Slot>> inventoryDictionary = new Dictionary<Inventory, List<Slot>>();
 
     private IInventory _inventory;
-    
+
     /// <summary>
     /// When this object loads, get the inventory attached to this object
     /// If the inventory is already in the dictionary, return

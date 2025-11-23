@@ -12,6 +12,9 @@ public class WeaponController : MonoBehaviour
     public WeaponItem equippedWeapon;   //A public variable that stores the weapon the charater is using. This should be a private variable
 
     public System.Func<List<ItemToken>> AmmoProvider { get; set; } //Injected inventory accessor for auto-reload
+    private bool _pendingFireAfterReload;
+    private string _ammoDisplay = string.Empty;
+    [SerializeField] private GUIStyle _ammoStyle;
 
     /// <summary>
     /// On start, equip the weapon this character apparently is using
@@ -19,7 +22,12 @@ public class WeaponController : MonoBehaviour
     /// </summary>
     void Start()
     {
+        if (AmmoProvider == null)
+        {
+            AmmoProvider = () => PlayerData.Instance?.GetInventory.GetAllItemsOfType("Ammo");
+        }
         ChangeWeapon(equippedWeapon);
+        UpdateAmmoHUD();
     }
 
     /// <summary>
@@ -45,6 +53,7 @@ public class WeaponController : MonoBehaviour
 
         //Tell the weapon to perform its version of equip
         equippedWeapon.Equip(transform, this);
+        UpdateAmmoHUD();
     }
 
     /// <summary>
@@ -89,16 +98,17 @@ public class WeaponController : MonoBehaviour
 
         if (equippedWeapon.CanFire == false)
         {
-            TryAutoReload();
+            TryAutoReload(fireAfterReload: firstAttack);
             return;
         }
 
         Debug.Log($"OnAttack: firstAttack={firstAttack}, weapon={equippedWeapon.name}, ammoInClip={(equippedWeapon as WeaponItem)?.GetAmmoInClip}");
         //Tell the weapon to perform its version of an attack
         equippedWeapon.Attack(firstAttack);
+        UpdateAmmoHUD();
     }
 
-    private void TryAutoReload()
+    private void TryAutoReload(bool fireAfterReload = false)
     {
         if (AmmoProvider == null)
         {
@@ -111,6 +121,55 @@ public class WeaponController : MonoBehaviour
             return;
         }
 
-        StartCoroutine(equippedWeapon.ReloadRoutine(ammo, onStarted: () => Debug.Log($"Auto reloading {equippedWeapon.name}..."), onCompleted: () => Debug.Log($"Auto reloaded {equippedWeapon.name}")));
+        if (equippedWeapon.IsReloading)
+        {
+            _pendingFireAfterReload |= fireAfterReload;
+            return;
+        }
+
+        _pendingFireAfterReload = fireAfterReload;
+        StartCoroutine(equippedWeapon.ReloadRoutine(
+            ammo,
+            onStarted: () => Debug.Log($"Auto reloading {equippedWeapon.name}..."),
+            onCompleted: () =>
+            {
+                Debug.Log($"Auto reloaded {equippedWeapon.name}");
+                UpdateAmmoHUD();
+                if (_pendingFireAfterReload && equippedWeapon.CanFire)
+                {
+                    equippedWeapon.Attack(true);
+                }
+                _pendingFireAfterReload = false;
+            }));
+    }
+
+    private void OnGUI()
+    {
+        if (equippedWeapon == null)
+        {
+            return;
+        }
+
+        if (_ammoStyle == null)
+        {
+            _ammoStyle = new GUIStyle(GUI.skin.label);
+            _ammoStyle.fontSize = (int)(_ammoStyle.fontSize * 4f);
+            _ammoStyle.normal.textColor = Color.red;
+        }
+
+        GUI.Label(new Rect(15, 15, 400, 60), _ammoDisplay, _ammoStyle);
+    }
+
+    private void UpdateAmmoHUD()
+    {
+        if (equippedWeapon == null)
+        {
+            _ammoDisplay = string.Empty;
+            return;
+        }
+
+        int clip = equippedWeapon.GetAmmoInClip;
+        int size = equippedWeapon.GetClipSize;
+        _ammoDisplay = size > 0 ? $"Ammo: {clip}/{size}" : $"Ammo: {clip}";
     }
 }

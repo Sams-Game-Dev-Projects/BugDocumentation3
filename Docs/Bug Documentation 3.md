@@ -108,9 +108,9 @@ The player cannot move through objects they are not meant to, such as walls.
 
 When shooting a weapon, the trail renderer does not go beyond the bounds of a collider. For example, if shooting at the edge of a wall, the bullet does not pass through the wall.
 
-- Problem: `WeaponItem.HitscanAttack` spherecasts to `float.MaxValue` and always draws to `hit.point`, so trails can extend past thin colliders/edges and ignore configured range; `attackConfiguration.maxDistance` isn’t applied (`Assets/Scripts/ItemScripts/EquipItems/WeaponItems/WeaponItem.cs:140-160`).
+- Problem: `WeaponItem.HitscanAttack` spherecasts to `float.MaxValue` and always draws to `hit.point`, so trails can extend past thin colliders/edges and ignore configured range; `attackConfiguration.maxDistance` isn’t applied (`Assets/Scripts/ItemScripts/EquipItems/WeaponItems/WeaponItem.cs`).
 - Plan: Use the configured max distance and clamp trail endpoints to the collider surface/trace distance.
-- Action: 
+- Action: Applied `attackConfiguration.maxDistance` to the spherecast and clamped miss trails to the shorter of missDistance/maxDistance so trails can’t overshoot colliders (`Assets/Scripts/ItemScripts/EquipItems/WeaponItems/WeaponItem.cs`).
 
  
 
@@ -133,8 +133,9 @@ The game builds without any issues both in the build process and when trying to 
 
 When an item in the inventory is being held/selected an image of its icon moves with the mouse so the player knows what item they are currently trying to place. If the player clicks outside of the inventory, or changes from Menu Mode back to Game Mode the item is dropped on the floor.
 
-What I found and did
-- Not implemented. Plan: add a UI `Image` that follows the mouse when `InventoryUIController.currentlySelectedItem != null`. On click outside inventory or `GameState` change to GamePlay, spawn `ItemPickup` with `SetItemToken` to drop the item.
+- Problem: Not implemented; held items don’t show an icon that follows the cursor, and clicking outside the inventory/menu does not drop the held item (`Assets/Scripts/InventoryScripts/InventoryUIController.cs`).
+- Plan: Add a UI `Image` that follows the mouse when `InventoryUIController.currentlySelectedItem != null`. On click outside inventory or `GameState` change to GamePlay, spawn `ItemPickup` with `SetItemToken` to drop the item.
+- Action: 
 
  
 
@@ -170,4 +171,5 @@ What I found and did
 When a weapon is equipped, have some kind of display that shows how much ammo is within the weapon. This must update when used. In addition to this, if the player fills a weapon with ammo, then drops it, only to pick it up again, the same amount of ammo should be in the firearm.
 
 What I found and did
-- Not implemented. Plan: add HUD text bound to the equipped weapon’s `_ammoInClip/clipSize`, update on `Attack`/`ReloadWeapon`. Preserve clip count on dropped weapons by keeping it on the cloned instance and persisting via token when dropped/picked up.
+- Plan: add HUD text bound to the equipped weapon’s `_ammoInClip/clipSize`, update on `Attack`/`ReloadWeapon`. Preserve clip count on dropped weapons by keeping it on the cloned instance and persisting via token when dropped/picked up.
+- Action: Added clip size getter and HUD rendering in `WeaponController` (`OnGUI`), updating on equip/attack/reload (`Assets/Scripts/CombatScripts/WeaponController.cs`, `Assets/Scripts/ItemScripts/EquipItems/WeaponItems/WeaponItem.cs`).

@@ -27,6 +27,7 @@ public class WeaponItem : EquipItem
 
     public override string GetItemType { get { return "Weapon"; } } //Allows the system to know this is a weapon
     public int GetAmmoInClip { get { return _ammoInClip; } }        //Expose current clip count
+    public int GetClipSize { get { return _currentAmmoItem != null ? _currentAmmoItem.clipSize : 0; } }
     public bool IsReloading { get { return _isReloading; } }
     public bool CanFire { get { return _currentAmmoItem != null && _ammoInClip >= attackConfiguration.ammoNeededPerAttack && _isReloading == false; } }
 
@@ -157,7 +158,7 @@ public class WeaponItem : EquipItem
         attackConfiguration.sphereRadius,
         attackDirection,
         out RaycastHit hit,
-        float.MaxValue,
+        attackConfiguration.maxDistance,
         attackConfiguration.hitMask))
         {
             _user.StartCoroutine(PlayTrailRenderer(_particleSystem.transform.position, hit.point, hit));
@@ -166,9 +167,10 @@ public class WeaponItem : EquipItem
         }
         else
         {
+            float missDistance = Mathf.Min(trailConfiguration.missDistance, attackConfiguration.maxDistance);
             _user.StartCoroutine(PlayTrailRenderer(
                 _particleSystem.transform.position,
-                _particleSystem.transform.position + (attackDirection * trailConfiguration.missDistance),
+                _particleSystem.transform.position + (attackDirection * missDistance),
                 new RaycastHit()));
         }
     }
