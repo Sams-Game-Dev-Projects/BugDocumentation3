@@ -11,6 +11,8 @@ public class WeaponController : MonoBehaviour
 {
     public WeaponItem equippedWeapon;   //A public variable that stores the weapon the charater is using. This should be a private variable
 
+    public System.Func<List<ItemToken>> AmmoProvider { get; set; } //Injected inventory accessor for auto-reload
+
     /// <summary>
     /// On start, equip the weapon this character apparently is using
     /// This functionality should be removed from start as it makes too many assumptions
@@ -58,7 +60,7 @@ public class WeaponController : MonoBehaviour
         }
 
         //Tell the weapon to perform its version of reload
-        equippedWeapon.ReloadWeapon(possibleAmmo);
+        StartCoroutine(equippedWeapon.ReloadRoutine(possibleAmmo, onStarted: () => Debug.Log($"Reloading {equippedWeapon.name}..."), onCompleted: () => Debug.Log($"Reloaded {equippedWeapon.name}")));
     }
 
     /// <summary>
@@ -70,10 +72,45 @@ public class WeaponController : MonoBehaviour
     {
         if (equippedWeapon == null)
         {
+            Debug.LogWarning("OnAttack called but no weapon is equipped.");
             return;
         }
 
+        // For non-automatic weapons, only process the initial press
+        if ((equippedWeapon.attackConfiguration?.automaticAttacking ?? false) == false && firstAttack == false)
+        {
+            return;
+        }
+
+        if (equippedWeapon.IsReloading)
+        {
+            return;
+        }
+
+        if (equippedWeapon.CanFire == false)
+        {
+            TryAutoReload();
+            return;
+        }
+
+        Debug.Log($"OnAttack: firstAttack={firstAttack}, weapon={equippedWeapon.name}, ammoInClip={(equippedWeapon as WeaponItem)?.GetAmmoInClip}");
         //Tell the weapon to perform its version of an attack
-        equippedWeapon.Attack(false);
+        equippedWeapon.Attack(firstAttack);
+    }
+
+    private void TryAutoReload()
+    {
+        if (AmmoProvider == null)
+        {
+            return;
+        }
+
+        List<ItemToken> ammo = AmmoProvider.Invoke();
+        if (ammo == null || ammo.Count == 0)
+        {
+            return;
+        }
+
+        StartCoroutine(equippedWeapon.ReloadRoutine(ammo, onStarted: () => Debug.Log($"Auto reloading {equippedWeapon.name}..."), onCompleted: () => Debug.Log($"Auto reloaded {equippedWeapon.name}")));
     }
 }

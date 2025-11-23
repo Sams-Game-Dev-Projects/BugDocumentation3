@@ -56,7 +56,7 @@ public class Inventory
 
         foreach (ItemToken item in _itemsInInventory)
         {
-            if (item.GetItemBase.GetItemType != itemType)
+            if (string.Equals(item.GetItemBase.GetItemType, itemType, System.StringComparison.OrdinalIgnoreCase))
             {
                 itemsFound.Add(item);
             }

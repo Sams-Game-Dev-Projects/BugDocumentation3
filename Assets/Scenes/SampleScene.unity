@@ -1860,7 +1860,7 @@ MonoBehaviour:
   _inventoryPanel: {fileID: 1975032376}
   _slotObject: {fileID: 3059371564487324421, guid: ccc0b510827542948982da2454c5995f, type: 3}
   _inventoryContainer: {fileID: 1413347598}
-  _slotSize: {x: 2, y: 2}
+  _slotSize: {x: 32, y: 32}
 --- !u!114 &1975032378
 MonoBehaviour:
   m_ObjectHideFlags: 0

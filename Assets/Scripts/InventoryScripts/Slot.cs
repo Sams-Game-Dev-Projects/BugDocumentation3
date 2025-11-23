@@ -56,6 +56,11 @@ public class Slot : MonoBehaviour
     /// </summary>
     public void AddItem(ItemToken newItem, bool updateUI = false)
     {
+        if (_itemInSlot != null)
+        {
+            _itemInSlot.onAmountChanged -= OnStackAmountChanged;
+        }
+
         _itemInSlot = newItem;
 
         if(updateUI == false)
@@ -74,6 +79,12 @@ public class Slot : MonoBehaviour
     /// </summary>
     private void OnStackAmountChanged(int newAmount)
     {
+        if (newAmount <= 0)
+        {
+            ClearInventoryOfItem();
+            return;
+        }
+
         _stackText.text = newAmount.ToString();
     }
 

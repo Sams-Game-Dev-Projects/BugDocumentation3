@@ -113,7 +113,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""name"": ""AltFire"",
                     ""type"": ""Button"",
                     ""id"": ""57cd2bf9-2b5c-4c70-b25a-2c3c06c24915"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false

@@ -53,26 +53,26 @@ public class ItemPickup : MonoBehaviour, IInteract
     /// </summary>
     public void Interact(IInteractor interactor)
     {
-        Debug.Log("a");
         if (interactor.GetInventory == null || _itemBaseToCollect == null)
         {
             return;
         }
-        Debug.Log("b");
         if(_itemToken == null)
         {
             _itemToken = _itemBaseToCollect.GenerateToken(_itemBaseToCollect);
         }
 
-        Debug.Log("1");
         IInventory inventory = interactor.GetInventory;
-        Debug.Log("2");
         if (InventoryUIController.inventoryDictionary.TryGetValue(inventory.GetInventory, out List<Slot> slots) == false)
         {
             InventoryUIController uiController = InventoryUIController.Instance;
             if (uiController == null)
             {
-                uiController = FindObjectOfType<InventoryUIController>(true);
+                var controllers = Resources.FindObjectsOfTypeAll<InventoryUIController>();
+                if (controllers != null && controllers.Length > 0)
+                {
+                    uiController = controllers[0];
+                }
             }
 
             uiController?.EnsureInventoryRegistered(inventory);
@@ -84,8 +84,6 @@ public class ItemPickup : MonoBehaviour, IInteract
         }
 
         inventory.GetInventory.CanAddItem(_itemToken, slots);
-        Debug.Log("3");
         ObjectPooling.Despawn(gameObject);
-        Debug.Log("4");
     }
 }

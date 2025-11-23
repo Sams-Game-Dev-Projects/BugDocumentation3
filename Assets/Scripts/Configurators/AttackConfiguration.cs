@@ -16,6 +16,7 @@ public class AttackConfiguration : ScriptableObject
     public float maxDistance;       //How far can a target be
     public float sphereRadius;      //Used to calculate if the projectile hits a surface such as a wall
     public int ammoNeededPerAttack; //How much ammo does one attack consume? A weapon like plasma rifle might consume 2 plasma per shot whereas a plasma pistol only uses 1
+    public int projectilesPerShot = 1; //How many projectiles are fired per attack (e.g., shotgun pellets)
 
     //Randomly selects a number between the min and max damage range
     public int CalculateDamage { get { return Random.Range(damageRange.x, damageRange.y + 1); } }

@@ -21,4 +21,5 @@ MonoBehaviour:
   attackRate: 1
   maxDistance: 100
   sphereRadius: 0.2
-  ammoNeededPerAttack: 6
+  ammoNeededPerAttack: 1
+  projectilesPerShot: 6

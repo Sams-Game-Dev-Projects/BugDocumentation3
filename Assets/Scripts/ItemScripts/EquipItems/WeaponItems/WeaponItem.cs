@@ -21,10 +21,14 @@ public class WeaponItem : EquipItem
     private float _lastShootTime;                       //Tracks the last time this weapon attacked, needed to know if it is allowed to attack again
 
     private AmmoItem _currentAmmoItem;                  //Stores the current ammo within the firearm
-
     private int _ammoInClip;                            //How many of the ammo type are within the firearm
+    [SerializeField] private float _reloadDuration = 1.5f; //How long a reload takes
+    private bool _isReloading;                          //Is the weapon currently reloading?
 
     public override string GetItemType { get { return "Weapon"; } } //Allows the system to know this is a weapon
+    public int GetAmmoInClip { get { return _ammoInClip; } }        //Expose current clip count
+    public bool IsReloading { get { return _isReloading; } }
+    public bool CanFire { get { return _currentAmmoItem != null && _ammoInClip >= attackConfiguration.ammoNeededPerAttack && _isReloading == false; } }
 
     /// <summary>
     /// When this it is equip to the user
@@ -103,6 +107,11 @@ public class WeaponItem : EquipItem
             return;
         }
 
+        if (_isReloading == true)
+        {
+            return;
+        }
+
         if(_currentAmmoItem == null)
         {
             return;
@@ -118,18 +127,22 @@ public class WeaponItem : EquipItem
         _lastShootTime = Time.time;
         _particleSystem.Play();
 
+        Debug.Log("Attack fired: weapon=" + name + ", remaining clip=" + _ammoInClip);
+
         AttackConfiguration attackConfig = attackConfiguration;
+        int projectiles = Mathf.Max(1, attackConfig.projectilesPerShot);
 
-        Vector3 attackDirection = Vector3.zero;
-        attackDirection = _user.transform.forward + _user.transform.TransformDirection(attackDirection);
+        for (int i = 0; i < projectiles; i++)
+        {
+            Vector3 attackDirection = _user.transform.forward;
+            attackDirection += new Vector3
+                (Random.Range(-attackConfig.spread.x, attackConfig.spread.x),
+                Random.Range(-attackConfig.spread.y, attackConfig.spread.y),
+                Random.Range(-attackConfig.spread.z, attackConfig.spread.z));
+            attackDirection.Normalize();
 
-        attackDirection += new Vector3
-            (Random.Range(-attackConfig.spread.x, attackConfig.spread.x),
-            Random.Range(-attackConfig.spread.y, attackConfig.spread.y),
-            Random.Range(-attackConfig.spread.z, attackConfig.spread.z));
-        attackDirection.Normalize();
-
-        HitscanAttack(attackDirection);
+            HitscanAttack(attackDirection);
+        }
     }
 
     /// <summary>
@@ -158,6 +171,36 @@ public class WeaponItem : EquipItem
                 _particleSystem.transform.position + (attackDirection * trailConfiguration.missDistance),
                 new RaycastHit()));
         }
+    }
+
+    /// <summary>
+    /// Begin a timed reload using available ammo.
+    /// </summary>
+    public System.Collections.IEnumerator ReloadRoutine(List<ItemToken> possibleAmmo, System.Action onStarted = null, System.Action onCompleted = null)
+    {
+        if (_isReloading)
+        {
+            yield break;
+        }
+
+        ItemToken tokenUsed = ReloadWeapon(possibleAmmo);
+        if (tokenUsed == null)
+        {
+            yield break; // no ammo available
+        }
+
+        _isReloading = true;
+        onStarted?.Invoke();
+
+        float elapsed = 0f;
+        while (elapsed < _reloadDuration)
+        {
+            elapsed += UnityEngine.Time.deltaTime;
+            yield return null;
+        }
+
+        onCompleted?.Invoke();
+        _isReloading = false;
     }
 
     /// <summary>

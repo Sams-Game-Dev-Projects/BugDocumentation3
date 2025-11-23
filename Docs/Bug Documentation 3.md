@@ -35,10 +35,22 @@ The game must include a minimum of 3 weapons. A firearm that does not fire autom
 - Action: 
 - Problem (new): Reload input requests `GetAllItemsOfType("ammo")`, but `Inventory.GetAllItemsOfType` is inverted and case-mismatched (`"Ammo"` in assets) so the filter removes matching ammo and weapons never find reload sources (`Assets/Scripts/InventoryScripts/Inventory.cs:53-65`, `Assets/Scripts/PlayerInput/InputHandler.cs:33-44`).
 - Plan: Fix the string comparison to include matching types (case-insensitive) and return only matching items.
-- Action: 
+- Action: Fixed `GetAllItemsOfType` to include matching item types case-insensitively so reload finds ammo (`Assets/Scripts/InventoryScripts/Inventory.cs:53-65`).
+- Problem: `WeaponController.OnAttack` always passes `false` to `equippedWeapon.Attack`, so semi-auto weapons never fire on first click (`Assets/Scripts/CombatScripts/WeaponController.cs:69-78`).
+- Plan: Pass through the `firstAttack` flag from input so non-automatic weapons can fire on initial press.
+- Action: Forwarded `firstAttack` to `equippedWeapon.Attack` (`Assets/Scripts/CombatScripts/WeaponController.cs:69-78`).
 - Problem (new): `DatabaseElement.SetItemDatabaseIndex` assigns `value = _index` instead of `_index = value`, leaving all ScriptableObject elements with index 0 and breaking token lookups (weapons/ammo resolve to the wrong base item) (`Assets/Scripts/DatabaseScripts/DatabaseElement.cs:13-16`).
 - Plan: Flip the assignment so `_index` stores the passed-in value; repopulate indices via the inspector button.
 - Action: Corrected the setter to assign `_index = value` so elements store their database index (`Assets/Scripts/DatabaseScripts/DatabaseElement.cs:13-16`). Repopulate indices via the Database inspector button.
+- Problem (new): Attacks weren’t firing—`OnAttack` dropped the first click and attack/weapon guards blocked without visibility; non-automatic weapons still received repeated attack calls each frame while held.
+- Plan: Pass `firstAttack` through, instrument the attack path, and skip repeated calls for non-automatic weapons.
+- Action: Forwarded `firstAttack` to `equippedWeapon.Attack`, added fire-only debug logging plus a clip getter, and ignored non-automatic attacks when not `firstAttack` (`Assets/Scripts/CombatScripts/WeaponController.cs:64-83`, `Assets/Scripts/ItemScripts/EquipItems/WeaponItems/WeaponItem.cs:20-122`).
+- Problem (new): Weapons never auto-reload and reloads are instant; attacks while empty just fail silently.
+- Plan: Add timed reloads (manual and auto on empty click) that block attacks while reloading and report progress.
+- Action: Added reload duration/reloading state to weapons, timed `ReloadRoutine`, auto-reload on empty attack using player inventory ammo, and progress logs (`Assets/Scripts/ItemScripts/EquipItems/WeaponItems/WeaponItem.cs:20-210`, `Assets/Scripts/CombatScripts/WeaponController.cs:12-95`).
+- Problem (new): Shotgun consumed 6 ammo per trigger and still fired a single hitscan; specs require multi-projectile behavior without draining the whole clip.
+- Plan: Support per-attack projectile count and use 1 ammo per shotgun shot with multiple pellets.
+- Action: Added `projectilesPerShot` to `AttackConfiguration`, looped hitscan per shot, set shotgun to 6 pellets and 1 ammo per attack (`Assets/Scripts/Configurators/AttackConfiguration.cs`, `Assets/Scripts/ItemScripts/EquipItems/WeaponItems/WeaponItem.cs`, `Assets/WeaponObjects/AttackConfigs/ShotgunAttack.asset`).
 
 
 ##### Section 4 - (3 Credit)
@@ -80,7 +92,7 @@ Items in the inventory that are stackable accurately display how many items are 
 
 - Problem: Stack text never updates because slots don’t subscribe to `onAmountChanged`; zero/removal isn’t handled, so empty stacks persist in data/UI.
 - Plan: Subscribe in `Slot.AddItem`, update text in the callback, and on zero remove the token from `_itemsInInventory`, clear covered slots, and refresh UI.
-- Action: 
+- Action: Subscribed/unsubscribed to `onAmountChanged`, clear visuals on null, and remove zero stacks by clearing their footprint and dropping the token (`Assets/Scripts/ItemScripts/ItemBase.cs:54-83`, `Assets/Scripts/InventoryScripts/Inventory.cs:209-225`, `Assets/Scripts/InventoryScripts/Slot.cs:57-76,73-156`).
 
  
 
@@ -149,7 +161,7 @@ What I found and did
 In the version of the game presented to you, the player must always manually load ammo by pressing R. Change this so that if the player attempts to attack with an empty weapon, and they have ammo, reload the weapon. In addition to this, make the reloading process take some time. Have some means to know how long the process is taking such as a loading bar, an animation, or audio; just some way to know that the weapon is loading and therefore cannot yet be used.
 
 What I found and did
-- Not implemented. Plan: on empty clip with matching ammo in inventory, auto‑trigger reload with a timed coroutine; block attacks during reload and show progress in UI/audio.
+- Implemented timed reloads and auto-reload: attacks now trigger a reload when empty (if ammo exists), reloads take 1.5s, block firing while in progress, and log progress percentages (`Assets/Scripts/ItemScripts/EquipItems/WeaponItems/WeaponItem.cs`, `Assets/Scripts/CombatScripts/WeaponController.cs`).
 
  
 
