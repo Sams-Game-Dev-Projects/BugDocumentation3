@@ -96,6 +96,7 @@ public class Slot : MonoBehaviour
             _slotIconImage.rectTransform.sizeDelta = Vector2.zero;
             _stackText.rectTransform.sizeDelta = Vector2.zero;
             _slotIconImage.sprite = null;
+            _stackText.text = string.Empty;
             return;
         }
 
@@ -105,6 +106,7 @@ public class Slot : MonoBehaviour
         _slotIconImage.rectTransform.sizeDelta = pixelSize;
         _stackText.rectTransform.sizeDelta = pixelSize;
         _slotIconImage.sprite = itemBase.itemIcon;
+        _stackText.text = itemToUse.GetAmount.ToString();
     }
 
     /// <summary>
@@ -123,6 +125,12 @@ public class Slot : MonoBehaviour
     {
         if(InventoryUIController.currentlySelectedItem != null)
         {
+            if (_itemInSlot != null)
+            {
+                // Target slot (or footprint) already occupied; do nothing
+                return;
+            }
+
             if(_myInventory.CanAddItem(_slotPosition, InventoryUIController.currentlySelectedItem, InventoryUIController.inventoryDictionary[_myInventory]))
             {
                 InventoryUIController.currentlySelectedItem = null;
@@ -160,6 +168,6 @@ public class Slot : MonoBehaviour
     /// </summary>
     private void ClearInventoryOfItem()
     {
-        _myInventory?.RemoveItem(InventoryUIController.inventoryDictionary[_myInventory], _itemInSlot.GetItemBase.itemSize, _slotPosition);
+        _myInventory?.RemoveItem(InventoryUIController.inventoryDictionary[_myInventory], _itemInSlot.GetItemBase.itemSize, _slotPosition, _itemInSlot);
     }
 }

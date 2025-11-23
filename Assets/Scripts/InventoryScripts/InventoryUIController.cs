@@ -91,7 +91,7 @@ public class InventoryUIController : MonoBehaviour
                     curSlot = go.AddComponent<Slot>();
                 }
 
-                curSlot.InitSlot(y, x, _slotSize, inventory);
+                curSlot.InitSlot(x, y, _slotSize, inventory);
                 slots.Add(curSlot);
             }
         }

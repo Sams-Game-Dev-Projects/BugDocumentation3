@@ -215,10 +215,9 @@ public class Inventory
     /// The item is being removed
     /// Loop through all spaces starting from the start position up until the start position plus the size of the object
     /// Each of those slots are sent a message that the space needs to be cleared
-    /// 
-    /// This method is flawless and has no issues, I promise ;)
+    /// Optionally remove the token from the inventory list
     /// </summary>
-    public void RemoveItem(List<Slot> slots, Vector2Int sizeToClear, Vector2Int startingPosition)
+    public void RemoveItem(List<Slot> slots, Vector2Int sizeToClear, Vector2Int startingPosition, ItemToken itemToRemove = null)
     {
         for (int y = startingPosition.y; y < startingPosition.y + sizeToClear.y; y++)
         {
@@ -226,6 +225,11 @@ public class Inventory
             {
                 slots[CalculateIndex(x, y)].RemoveItem();
             }
+        }
+
+        if (itemToRemove != null)
+        {
+            _itemsInInventory.Remove(itemToRemove);
         }
     }
 }
