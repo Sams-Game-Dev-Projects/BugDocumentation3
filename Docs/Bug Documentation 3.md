@@ -161,7 +161,7 @@ What I found and did
 In the version of the game presented to you, the player must always manually load ammo by pressing R. Change this so that if the player attempts to attack with an empty weapon, and they have ammo, reload the weapon. In addition to this, make the reloading process take some time. Have some means to know how long the process is taking such as a loading bar, an animation, or audio; just some way to know that the weapon is loading and therefore cannot yet be used.
 
 What I found and did
-- Implemented timed reloads and auto-reload: attacks now trigger a reload when empty (if ammo exists), reloads take 1.5s, block firing while in progress, and log progress percentages (`Assets/Scripts/ItemScripts/EquipItems/WeaponItems/WeaponItem.cs`, `Assets/Scripts/CombatScripts/WeaponController.cs`).
+- Action: Implemented timed reloads and auto-reload: attacks now trigger a reload when empty (if ammo exists), reloads take 1.5s, block firing while in progress, and log progress percentages (`Assets/Scripts/ItemScripts/EquipItems/WeaponItems/WeaponItem.cs`, `Assets/Scripts/CombatScripts/WeaponController.cs`).
 
  
 
